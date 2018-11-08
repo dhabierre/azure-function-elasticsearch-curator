@@ -1,0 +1,22 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet"
+  },
+  "Curator": {
+    "RequestTimeout": 10,
+    "Entries": [
+      {
+        "Name": "Docker",
+        "Endpoint": "http://127.0.0.1:9200",
+        "Indices": [
+          {
+            "Prefix": "sample-",
+            "RetentionDays": 14
+          }
+        ]
+      }
+    ]
+  }
+}
