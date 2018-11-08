@@ -2,14 +2,14 @@
 
 Elasticsearch Curator for Azure Function
 
-# Environment
+## Environment
 
 - Written in NET Core 2.1
 - Using [NEST](https://www.elastic.co/guide/en/elasticsearch/client/net-api/current/introduction.html) (Elasticsearch high-level client)
 
-# Configuration
+## Configuration
 
-## Scheduling
+### Scheduling
 
 The function is scheduled (each 5 seconds for testing - adapt to your needs).
 
@@ -22,7 +22,7 @@ public static class Function
 }
 ```
 
- ## local.settings.json
+### local.settings.json
 
 ```cs
 "Curator": {
@@ -42,7 +42,7 @@ public static class Function
 }
 ```
 
-# Test the function
+## Test the function
 
 You need
 
@@ -51,6 +51,6 @@ You need
 
 You can pop an Elasticsearch server using my [Docker Compose Elasticsearch stack](https://github.com/dhabierre/docker-integration-tests). Think to add the date to the index name in the `create-index.ps1` script before running it (ex, `sample-2018-10-01`).
 
-# Limitations
+## Limitations
 
 - The pattern is hardcoded (%Y.%m.%d)
