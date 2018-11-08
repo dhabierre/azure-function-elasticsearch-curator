@@ -45,15 +45,22 @@ namespace ElaticsearchCuratorAzureFunction
 
                     foreach (var idx in indices)
                     {
-                        log.LogInformation($"--> Deleting index '{idx.Index}' (DocsCount = {idx.DocsCount}, PrimaryStoreSize = {idx.PrimaryStoreSize}, StoreSize = {idx.StoreSize})");
+                        if (!settings.WithDryRun)
+                        {
+                            log.LogInformation($"--> Deleting index '{idx.Index}' (DocsCount = {idx.DocsCount}, PrimaryStoreSize = {idx.PrimaryStoreSize}, StoreSize = {idx.StoreSize})");
 
-                        try
-                        {
-                            client.DeleteIndex(idx.Index);
+                            try
+                            {
+                                client.DeleteIndex(idx.Index);
+                            }
+                            catch (Exception e)
+                            {
+                                log.LogError(e, $"!!> Error while deleting index '{idx.Index}': {e.Message}");
+                            }
                         }
-                        catch (Exception e)
+                        else
                         {
-                            log.LogError(e, $"!!> Error while deleting index '{idx.Index}': {e.Message}");
+                            log.LogInformation($"--> [DRY-RUN] Deleting index '{idx.Index}' (DocsCount = {idx.DocsCount}, PrimaryStoreSize = {idx.PrimaryStoreSize}, StoreSize = {idx.StoreSize})");
                         }
                     }
                 }

@@ -26,7 +26,8 @@ public static class Function
 
 ```cs
 "Curator": {
-    "RequestTimeout": 10,
+    "WithDryRun": true,  // true => will not perform index DELETE
+    "RequestTimeout": 4, // in seconds
     "Entries": [
       {
         "Name": "Docker",
@@ -41,6 +42,8 @@ public static class Function
     ]
 }
 ```
+
+Set `WithDryRun` value to `false` in order to delete indices on the Elasticsearch (be careful !)
 
 ## Test the function
 
