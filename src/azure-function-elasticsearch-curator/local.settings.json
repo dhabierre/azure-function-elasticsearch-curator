@@ -3,7 +3,7 @@
   "Values": {
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet",
-    "CronExpression": "*/3 * * * * *"
+    "CronExpression": "*/5 * * * * *"
   },
   "Curator": {
     "WithDryRun": true,  // true => will not perform index DELETE

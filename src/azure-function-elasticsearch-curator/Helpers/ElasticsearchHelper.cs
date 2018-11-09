@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
-    using System.Linq;
     using Microsoft.Extensions.Logging;
     using Nest;
 
@@ -26,17 +25,19 @@
             return client;
         }
 
-        public static IEnumerable<CatIndicesRecord> GetOutOfDateIndices(IElasticClient client, string prefix, int retentionDays, ILogger log)
+        public static IEnumerable<CatIndicesRecord> GetOutOfDateIndices(IElasticClient client, string indexPrefix, int retentionDays, ILogger log)
         {
             var indices = new List<CatIndicesRecord>();
 
-            var catIndicesResponse = client.CatIndices(x => x.AllIndices());
+            var indexPattern = GetIndexPattern(indexPrefix);
+
+            var catIndicesResponse = client.CatIndices(x => x.Index(indexPattern));
 
             if (catIndicesResponse.IsValid)
             {
-                foreach (var idx in catIndicesResponse.Records.Where(r => r.Index.StartsWith(prefix)))
+                foreach (var idx in catIndicesResponse.Records)
                 {
-                    var idxDate = idx.Index.Substring(prefix.Length);
+                    var idxDate = idx.Index.Substring(indexPattern.Length - 1);
                     var idxDateTime = DateTime.Parse(idxDate, new CultureInfo("en-US"));
 
                     if (idxDateTime.AddDays(retentionDays) < DateTime.Today)
@@ -52,5 +53,7 @@
 
             return indices;
         }
+
+        private static string GetIndexPattern(string indexPrefix) => indexPrefix.TrimEnd('*') + "*";
     }
 }
