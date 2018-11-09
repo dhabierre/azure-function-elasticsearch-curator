@@ -13,7 +13,7 @@ namespace ElaticsearchCuratorAzureFunction
     public static class Function
     {
         [FunctionName("ElaticsearchCuratorAzureFunction")]
-        public static void Run([TimerTrigger("*/5 * * * * *")]TimerInfo timerInfo, ExecutionContext context, ILogger log)
+        public static void Run([TimerTrigger("%CronExpression%")]TimerInfo timerInfo, ExecutionContext context, ILogger log)
         {
             var configuration = GetConfiguration(context);
             var section = configuration.GetSection("Curator");
