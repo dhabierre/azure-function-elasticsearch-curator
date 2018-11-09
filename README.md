@@ -17,7 +17,7 @@ The function is scheduled (each 5 seconds for testing - adapt to your needs).
 public static class Function
 {
     [FunctionName("ElaticsearchCuratorAzureFunction")]
-    public static void Run([TimerTrigger("*/5 * * * * *")]TimerInfo timerInfo, ExecutionContext context, ILogger log)
+    public static void Run([TimerTrigger("%CronExpression%")]TimerInfo timerInfo, ExecutionContext context, ILogger log)
     ...
 }
 ```
@@ -25,7 +25,14 @@ public static class Function
 ### local.settings.json
 
 ```cs
-"Curator": {
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet",
+    "CronExpression": "*/5 * * * * *"
+  },
+  "Curator": {
     "WithDryRun": true,  // true => will not perform index DELETE
     "RequestTimeout": 4, // in seconds
     "Entries": [
@@ -40,6 +47,7 @@ public static class Function
         ]
       }
     ]
+  }
 }
 ```
 
