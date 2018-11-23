@@ -39,10 +39,11 @@ public static class Function
       {
         "Name": "Docker",
         "Endpoint": "http://127.0.0.1:9200",
-        "Indices": [
+        "IndexEntries": [
           {
             "Prefix": "sample-",
-            "RetentionDays": 14
+            "RetentionDays": 14,
+            "DeleteCloseIndicesOnly": true // true => won't delete 'open' indices
           }
         ]
       }
