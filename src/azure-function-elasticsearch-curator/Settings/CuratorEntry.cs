@@ -8,6 +8,6 @@
 
         public string Endpoint { get; set; }
 
-        public IEnumerable<IndexEntry> Indices { get; set; }
+        public IEnumerable<IndexEntry> IndexEntries { get; set; }
     }
 }

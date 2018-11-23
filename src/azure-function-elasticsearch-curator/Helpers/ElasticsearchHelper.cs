@@ -3,8 +3,10 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.Linq;
     using Microsoft.Extensions.Logging;
     using Nest;
+    using Settings;
 
     static class ElasticsearchHelper
     {
@@ -25,11 +27,11 @@
             return client;
         }
 
-        public static IEnumerable<CatIndicesRecord> GetOutOfDateIndices(IElasticClient client, string indexPrefix, int retentionDays, ILogger log)
+        public static IEnumerable<CatIndicesRecord> GetOutOfDateIndices(IElasticClient client, IndexEntry indexEntry, ILogger log)
         {
             var indices = new List<CatIndicesRecord>();
 
-            var indexPattern = GetIndexPattern(indexPrefix);
+            var indexPattern = GetIndexPattern(indexEntry.Prefix);
 
             var catIndicesResponse = client.CatIndices(x => x.Index(indexPattern));
 
@@ -40,7 +42,7 @@
                     var idxDate = idx.Index.Substring(indexPattern.Length - 1);
                     var idxDateTime = DateTime.Parse(idxDate, new CultureInfo("en-US"));
 
-                    if (idxDateTime.AddDays(retentionDays) < DateTime.Today)
+                    if (idxDateTime.AddDays(indexEntry.RetentionDays) < DateTime.Today)
                     {
                         indices.Add(idx);
                     }
@@ -51,7 +53,9 @@
                 log.LogWarning(catIndicesResponse.DebugInformation);
             }
 
-            return indices;
+            return indexEntry.DeleteCloseIndicesOnly
+                ? indices.Where(i => i.Index.ToUpperInvariant() == "CLOSE")
+                : indices;
         }
 
         private static string GetIndexPattern(string indexPrefix) => indexPrefix.TrimEnd('*') + "*";

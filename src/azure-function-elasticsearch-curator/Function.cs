@@ -28,13 +28,13 @@ namespace ElaticsearchCuratorAzureFunction
 
                 var client = ElasticsearchHelper.CreateElasticClient(new Uri(entry.Endpoint), settings.RequestTimeout);
 
-                foreach (var index in entry.Indices)
+                foreach (var indexEntry in entry.IndexEntries)
                 {
                     IEnumerable<CatIndicesRecord> indices = null;
 
                     try
                     {
-                        indices = ElasticsearchHelper.GetOutOfDateIndices(client, index.Prefix, index.RetentionDays, log);
+                        indices = ElasticsearchHelper.GetOutOfDateIndices(client, indexEntry, log);
                     }
                     catch (Exception e)
                     {
@@ -47,7 +47,7 @@ namespace ElaticsearchCuratorAzureFunction
                     {
                         if (!settings.WithDryRun)
                         {
-                            log.LogInformation($"--> Deleting index '{idx.Index}' (DocsCount = {idx.DocsCount}, PrimaryStoreSize = {idx.PrimaryStoreSize}, StoreSize = {idx.StoreSize})");
+                            log.LogInformation($"--> Deleting index '{idx.Index}' (Status = {idx.Status}, DocsCount = {idx.DocsCount}, PrimaryStoreSize = {idx.PrimaryStoreSize}, StoreSize = {idx.StoreSize})");
 
                             try
                             {
@@ -60,7 +60,7 @@ namespace ElaticsearchCuratorAzureFunction
                         }
                         else
                         {
-                            log.LogInformation($"--> [DRY-RUN] Deleting index '{idx.Index}' (DocsCount = {idx.DocsCount}, PrimaryStoreSize = {idx.PrimaryStoreSize}, StoreSize = {idx.StoreSize})");
+                            log.LogInformation($"--> [DRY-RUN] Deleting index '{idx.Index}' (Status = {idx.Status}, DocsCount = {idx.DocsCount}, PrimaryStoreSize = {idx.PrimaryStoreSize}, StoreSize = {idx.StoreSize})");
                         }
                     }
                 }
